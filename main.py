@@ -16,7 +16,8 @@ BLACK = (0, 0, 0)
 BROWN = (43, 24, 14)
 GRAY = (117, 109, 102)
 ROAD = (46, 46, 46)
-CAR_COLORS = [RED, WHITE, YELLOW, GREEN, BLACK]
+CAR_COLORS = [RED, WHITE, YELLOW, GREEN]
+ENEMYSPEEDS = [-5, -6, -7]
 
 # game constants
 DISPLAY_WIDTH = 800
@@ -35,7 +36,7 @@ class Car():
         self.width = width
         self.height = height
         self.radius = radius
-        self.x_speed = random.randint(3, 5)
+        self.x_speed = random.choice(ENEMYSPEEDS)
         self.y_speed = 0
         self.color1 = color1
         self.color2 = color2
@@ -71,12 +72,16 @@ class Car():
             self.y = DISPLAY_WIDTH - self.width
 
     def move_enemy(self):
-        if self.x > DISPLAY_WIDTH:
-            self.y = random.randrange(0, DISPLAY_HEIGHT, 5)
-            self.x = random.randrange(-100, 0, 5)
-            self.x_speed = random.randint(3, 5)
+        self.x += self.x_speed
+        if self.x < -100:
+            self.x = 900
+            self.y = random.randrange(21, 289)
+            self.color1 = random.choice(CAR_COLORS)
+            self.x_speed = random.choice(ENEMYSPEEDS)
 
-            self.x += self.x_speed
+
+
+
 
 
 class Grass():
@@ -141,25 +146,36 @@ y_loc = DISPLAY_HEIGHT - 2*player_width
 player = Car(x_loc, y_loc, 50, 40, 10, BLUE, BLACK, WINDOWBLUE)
 
 # enemies
-enemy_width = 20
+enemy_width = 50
+enemy_height = 40
+enemy_radius = 10
 enemy_list = []
-for i in range(10):
-    x_coord = random.randrange(-100, 0, 5)
-    random_y = random.randrange(0, DISPLAY_WIDTH, 5)
-    enemy = Car(screen, random_y, x_coord, enemy_width, enemy_width, random.choice(CAR_COLORS), BLACK, WINDOWBLUE)
+for i in range(5):
+    x_coord = 900
+    random_y = random.randrange(21, 289)
+
+    enemy = Car(x_coord, random_y, enemy_width, enemy_height, enemy_radius, random.choice(CAR_COLORS), BLACK, WINDOWBLUE)
     enemy_list.append(enemy)
 
 running = True
 
 while running:
 
-    pos = pygame.mouse.get_pos()
+    # pos = pygame.mouse.get_pos()
     # player.x = pos[0] - .5 * player.width
-    player.y = pos[1] - .5 * player.width
+    # player.y = pos[1] - .5 * player.width
 
     for event in pygame.event.get():
 
         # check for user input
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                player.y_speed = -4
+            if event.key == pygame.K_s:
+                player.y_speed = 4
+        if event.type == pygame.KEYUP:
+            player.y_speed = 0
+
         if event.type == pygame.QUIT:
             running = False
 
