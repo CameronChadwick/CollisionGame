@@ -79,9 +79,10 @@ class Car():
             self.color1 = random.choice(CAR_COLORS)
             self.x_speed = random.choice(ENEMYSPEEDS)
 
-
-
-
+    def enemy_collision(self):
+        if (self.x <= enemy.x <= self.x + self.width or self.x <= enemy.x + enemy.width < self.x + self.width) \
+                and (self.y < enemy.y < self.y + self.width or self.y < enemy.y + enemy.width < self.y + self.width):
+            self.color1 = random.choice(CAR_COLORS)
 
 
 class Grass():
@@ -194,6 +195,10 @@ while running:
     for enemy in enemy_list:
         enemy.draw_car()
         enemy.move_enemy()
+        if player.enemy_collision():
+            print("Lose")
+
+
 
     pygame.display.flip()
 
